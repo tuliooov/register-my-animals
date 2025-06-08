@@ -125,7 +125,7 @@ export default function ListaAnimais() {
 
           {animal.imageUrl && (
             <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
-              <Image src={animal.imageUrl} alt={animal.especie} style={{ width: 300, height: 300, objectFit: 'cover', borderRadius: '4px' }} />
+              <img src={animal.imageUrl} alt={animal.especie} style={{ width: 300, height: 300, objectFit: 'cover', borderRadius: '4px' }} />
             </Box>
           )}
 
