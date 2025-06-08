@@ -44,7 +44,6 @@ import { formatCurrency, formatDate, getUniqueCategories } from '@/utils';
 import { useAnimalAge } from '@/hooks';
 import { Animal } from '@/types';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 
 export default function ListaAnimais() {
   const router = useRouter();
