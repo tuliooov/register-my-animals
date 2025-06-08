@@ -29,6 +29,7 @@ import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Suspense } from 'react';
 
 const categorias = [
   'Peixe',
@@ -40,7 +41,17 @@ const categorias = [
   'Outro',
 ];
 
-export default function CadastroAnimal() {
+
+export default function CadastroPage() {
+  return (
+    <Suspense fallback={<div>Carregando formulário...</div>}>
+      <CadastroAnimalComponente />
+    </Suspense>
+  );
+}
+
+
+function CadastroAnimalComponente() {
   const [animals, setAnimals] = useAtom(animalsAtom);
   const router = useRouter();
   const searchParams = useSearchParams();
