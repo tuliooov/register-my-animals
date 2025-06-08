@@ -74,6 +74,10 @@ export default function ListaAnimais() {
     setDeleteDialog({ open: true, animal });
   };
 
+  const handleEdt = (animal: Animal) => {
+    router.push(`/cadastro?id=${animal.id}`)
+  }
+
   const confirmDelete = () => {
     if (deleteDialog.animal) {
       const updatedAnimals = animals.filter(a => a.id !== deleteDialog.animal!.id);
@@ -292,6 +296,7 @@ export default function ListaAnimais() {
         <DraggableAnimalList
           animals={filteredAnimals}
           onDelete={handleDelete}
+          onEdit={handleEdt}
         />
       ) : (
         <Grid container spacing={3}>
