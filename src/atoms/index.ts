@@ -93,15 +93,17 @@ export const filteredAnimalsAtom = atom((get) => {
     return true;
   });
 
-  // Ordenação
-  filtered.sort((a, b) => {
-    let aValue: any = a[sort.field];
-    let bValue: any = b[sort.field];
+  type SortField = keyof Animal;
 
-    // Tratamento especial para datas
-    if (sort.field === "dataCompra") {
-      aValue = new Date(aValue).getTime();
-      bValue = new Date(bValue).getTime();
+  filtered.sort((a, b) => {
+    const field = sort.field as SortField;
+
+    let aValue = a[field] ?? "";
+    let bValue = b[field] ?? "";
+
+    if (field === "dataCompra") {
+      aValue = new Date(aValue as string).getTime();
+      bValue = new Date(bValue as string).getTime();
     }
 
     if (sort.direction === "asc") {

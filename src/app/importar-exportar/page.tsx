@@ -279,10 +279,10 @@ export default function ImportarExportar() {
                   Exportação
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  1. Clique em "Exportar Dados" para gerar o texto<br />
-                  2. Use "Copiar" para copiar para área de transferência<br />
-                  3. Use "WhatsApp" para compartilhar diretamente<br />
-                  4. Use "Baixar" para salvar como arquivo
+                  1. Clique em &quot;Exportar Dados&quot; para gerar o texto<br />
+                  2. Use &quot;Copiar&quot; para copiar para área de transferência<br />
+                  3. Use &quot;WhatsApp&quot; para compartilhar diretamente<br />
+                  4. Use &quot;Baixar&quot; para salvar como arquivo
                 </Typography>
               </Grid>
 
@@ -293,8 +293,8 @@ export default function ImportarExportar() {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   1. Cole o texto exportado no campo de importação<br />
-                  2. O texto deve começar com "ANIMAL::"<br />
-                  3. Clique em "Importar Dados"<br />
+                  2. O texto deve começar com &quot;ANIMAL::&quot;<br />
+                  3. Clique em &quot;Importar Dados&quot;<br />
                   4. Os animais serão adicionados à sua lista
                 </Typography>
               </Grid>
@@ -306,7 +306,7 @@ export default function ImportarExportar() {
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   1. Exporte seus dados primeiro<br />
-                  2. Clique no botão "WhatsApp"<br />
+                  2. Clique no botão &quot;WhatsApp&quot;<br />
                   3. Escolha o contato para enviar<br />
                   4. O destinatário pode importar os dados
                 </Typography>

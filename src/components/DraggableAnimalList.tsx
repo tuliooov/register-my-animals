@@ -25,7 +25,6 @@ import {
   CardContent,
   Typography,
   IconButton,
-  Avatar,
   Chip,
   Grid,
   Paper,
