@@ -1,3 +1,4 @@
+
 'use client';
 
 import {
@@ -43,6 +44,7 @@ import { formatCurrency, formatDate, getUniqueCategories } from '@/utils';
 import { useAnimalAge } from '@/hooks';
 import { Animal } from '@/types';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function ListaAnimais() {
   const router = useRouter();
@@ -121,23 +123,29 @@ export default function ListaAnimais() {
             </Box>
           </Box>
 
+          {animal.imageUrl && (
+            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+              <Image src={animal.imageUrl} alt={animal.especie} style={{ width: 300, height: 300, objectFit: 'cover', borderRadius: '4px' }} />
+            </Box>
+          )}
+
           <Grid container spacing={1} sx={{ mb: 2 }}>
-            <Grid >
+            <Grid item xs={12}>
               <Typography variant="body2" color="text.secondary">
                 Quantidade: {animal.quantidade}
               </Typography>
             </Grid>
-            <Grid >
+            <Grid item xs={12}>
               <Typography variant="body2" color="text.secondary">
                 Tamanho: {animal.tamanho} cm
               </Typography>
             </Grid>
-            <Grid >
+            <Grid item xs={12}>
               <Typography variant="body2" color="text.secondary">
                 Valor: {formatCurrency(animal.valor)}
               </Typography>
             </Grid>
-            <Grid >
+            <Grid item xs={12}>
               <Typography variant="body2" color="text.secondary">
                 Idade: {age}
               </Typography>
@@ -205,7 +213,7 @@ export default function ListaAnimais() {
         </Typography>
 
         <Grid container spacing={2}>
-          <Grid >
+          <Grid item xs={12} sm={6} md={4}>
             <TextField
               fullWidth
               label="Buscar por espécie"
@@ -221,7 +229,7 @@ export default function ListaAnimais() {
             />
           </Grid>
 
-          <Grid minWidth={150}>
+          <Grid item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <InputLabel>Categoria</InputLabel>
               <Select
@@ -239,7 +247,7 @@ export default function ListaAnimais() {
             </FormControl>
           </Grid>
 
-          <Grid >
+          <Grid item xs={12} sm={6} md={4}>
             <TextField
               fullWidth
               label="Quantidade mínima"
@@ -301,7 +309,7 @@ export default function ListaAnimais() {
       ) : (
         <Grid container spacing={3}>
           {filteredAnimals.map((animal) => (
-            <Grid key={animal.id}>
+            <Grid key={animal.id} item xs={12} sm={6} md={4}>
               <AnimalCard animal={animal} />
             </Grid>
           ))}
@@ -332,4 +340,5 @@ export default function ListaAnimais() {
     </Layout>
   );
 }
+
 

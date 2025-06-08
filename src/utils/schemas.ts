@@ -33,6 +33,7 @@ export const animalSchema = z.object({
     .string()
     .max(254, "Observação deve ter no máximo 254 caracteres")
     .optional(),
+  imageUrl: z.string().url("URL da imagem inválida").optional().nullable(),
 });
 
 export type AnimalFormData = z.infer<typeof animalSchema>;
@@ -48,3 +49,5 @@ export const importSchema = z.object({
 });
 
 export type ImportFormData = z.infer<typeof importSchema>;
+
+

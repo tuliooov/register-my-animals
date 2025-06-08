@@ -9,6 +9,7 @@ export interface Animal {
   tamanho: number; // decimal
   origem: string; // máx. 100 caracteres
   observacao?: string; // máx. 254 caracteres, opcional
+  imageUrl?: string | null | undefined;
 }
 
 export interface FilterOptions {

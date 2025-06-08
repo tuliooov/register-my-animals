@@ -6,7 +6,7 @@ import { animalsAtom } from '@/atoms';
 import { animalSchema, AnimalFormData } from '@/utils/schemas';
 import { generateId, } from '@/utils';
 import { Layout } from '@/components/Layout';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Animal } from '@/types';
@@ -24,10 +24,13 @@ import {
   InputAdornment,
   Card,
   CardContent,
+  IconButton,
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
+import PhotoCamera from '@mui/icons-material/PhotoCamera';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Suspense } from 'react';
 
@@ -63,6 +66,8 @@ function CadastroAnimalComponente() {
     control,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<AnimalFormData>({
     resolver: zodResolver(animalSchema),
@@ -75,11 +80,14 @@ function CadastroAnimalComponente() {
       tamanho: 0,
       origem: '',
       observacao: '',
+      imageUrl: null,
     },
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const currentImageUrl = watch('imageUrl');
 
   useEffect(() => {
     if (isEditing) {
@@ -95,6 +103,43 @@ function CadastroAnimalComponente() {
       }
     }
   }, [animalId, animals, isEditing, reset, router]);
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+
+    const file = event.target.files[0];
+    setIsSubmitting(true);
+    setSubmitMessage(null);
+
+    try {
+      const response = await fetch(`/api/upload?filename=${file.name}`, {
+        method: 'POST',
+        body: file,
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao fazer upload da imagem');
+      }
+
+      const newBlob = await response.json();
+      setValue('imageUrl', newBlob.url);
+      setSubmitMessage({ type: 'success', text: 'Imagem enviada com sucesso!' });
+    } catch (error) {
+      console.error('Erro ao enviar imagem:', error);
+      setSubmitMessage({ type: 'error', text: 'Erro ao enviar imagem. Tente novamente.' });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setValue('imageUrl', null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   const onSubmit: SubmitHandler<AnimalFormData> = async (data) => {
     setIsSubmitting(true);
@@ -112,6 +157,7 @@ function CadastroAnimalComponente() {
         tamanho: data.tamanho,
         origem: data.origem,
         observacao: data.observacao,
+        imageUrl: data.imageUrl,
       };
 
       if (isEditing) {
@@ -123,7 +169,11 @@ function CadastroAnimalComponente() {
         reset({
           ...data,
           dataCompra: new Date(),
+          imageUrl: null,
         });
+        if (fileInputRef.current) {
+          fileInputRef.current.value = '';
+        }
       }
 
       router.push('/lista')
@@ -147,9 +197,13 @@ function CadastroAnimalComponente() {
       tamanho: 0,
       origem: '',
       observacao: '',
+      imageUrl: null,
     });
     setSubmitMessage(null);
     router.replace('/cadastro'); // Limpa a URL para remover o ID de edição
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   return (
@@ -174,7 +228,7 @@ function CadastroAnimalComponente() {
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={3}>
               {/* Categoria */}
-              <Grid minWidth={150}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="categoria"
                   control={control}
@@ -199,7 +253,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Espécie */}
-              <Grid>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="especie"
                   control={control}
@@ -216,7 +270,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Quantidade */}
-              <Grid >
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="quantidade"
                   control={control}
@@ -236,7 +290,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Valor */}
-              <Grid >
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="valor"
                   control={control}
@@ -259,7 +313,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Tamanho */}
-              <Grid >
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="tamanho"
                   control={control}
@@ -282,7 +336,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Data de Compra */}
-              <Grid>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="dataCompra"
                   control={control}
@@ -303,7 +357,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Data de Nascimento */}
-              <Grid>
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="dataNascimento"
                   control={control}
@@ -324,7 +378,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Origem */}
-              <Grid >
+              <Grid item xs={12} sm={6} md={4}>
                 <Controller
                   name="origem"
                   control={control}
@@ -340,8 +394,42 @@ function CadastroAnimalComponente() {
                 />
               </Grid>
 
+              {/* Imagem do Animal */}
+              <Grid item xs={12} sm={6} md={4}>
+                <Box display="flex" alignItems="center" gap={2}>
+                  <Button
+                    variant="outlined"
+                    component="label"
+                    startIcon={<PhotoCamera />}
+                    disabled={isSubmitting}
+                  >
+                    Upload Imagem
+                    <input
+                      type="file"
+                      hidden
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      ref={fileInputRef}
+                    />
+                  </Button>
+                  {currentImageUrl && (
+                    <Box display="flex" alignItems="center" gap={1}>
+                      <img src={currentImageUrl} alt="Pré-visualização" style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: '4px' }} />
+                      <IconButton onClick={handleRemoveImage} size="small" disabled={isSubmitting}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  )}
+                </Box>
+                {errors.imageUrl && (
+                  <Typography variant="caption" color="error" sx={{ mt: 1 }}>
+                    {errors.imageUrl.message}
+                  </Typography>
+                )}
+              </Grid>
+
               {/* Observação */}
-              <Grid >
+              <Grid item xs={12}>
                 <Controller
                   name="observacao"
                   control={control}
@@ -360,7 +448,7 @@ function CadastroAnimalComponente() {
               </Grid>
 
               {/* Botões */}
-              <Grid >
+              <Grid item xs={12}>
                 <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                   <Button
                     variant="outlined"
